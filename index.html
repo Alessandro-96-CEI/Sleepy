@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sonno</title>
+  <meta name="description" content="Registra quanto dormi con un tocco.">
+  <meta name="theme-color" content="#141634">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Sonno">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="screen">
+  <header class="head">
+    <div class="head-text">
+      <h1 id="title">Sonno?</h1>
+      <p class="eyebrow" id="eyebrow">Premi il pulsante per iniziare a registrare la sessione di sonno</p>
+    </div>
+    <button type="button" class="icon-btn" id="open-settings" aria-label="Impostazioni">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </header>
+
+  <div class="center">
+    <button type="button" class="big" id="big">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="ring-track" cx="50" cy="50" r="48.4"/>
+        <circle class="ring-fill" id="ring-fill" cx="50" cy="50" r="48.4" pathLength="100"/>
+      </svg>
+      <span class="big-ico" id="big-ico" aria-hidden="true"></span>
+      <span class="big-title" id="big-title">Vado a dormire</span>
+      <span class="big-sub" id="big-sub">Premi qui</span>
+    </button>
+    <div class="below" id="below" aria-live="polite"></div>
+  </div>
+
+  <div class="koala-wrap" id="koala-wrap">
+    <img class="koala" id="koala" src="img/koala-saluta.png" alt="Il koala saluta" width="415" height="414">
+    <div class="zzz" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>
+  </div>
+</main>
+
+<div class="sheet-backdrop" id="settings" hidden>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="sheet-head">
+      <h2 id="settings-title">Impostazioni</h2>
+      <button type="button" class="icon-btn" id="close-settings" aria-label="Chiudi">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <fieldset class="options">
+      <legend>Come finisce la sessione</legend>
+      <label class="option">
+        <input type="radio" name="mode" value="confirm" id="mode-confirm">
+        <span class="option-body">
+          <b>Con conferma</b>
+          <span>La sessione si ferma solo quando premi «Mi sono svegliato». Se apri l'app di notte per guardare l'ora, il conteggio continua.</span>
+        </span>
+      </label>
+      <label class="option">
+        <input type="radio" name="mode" value="auto" id="mode-auto">
+        <span class="option-body">
+          <b>Automatica</b>
+          <span>La sessione si ferma appena riapri l'app: al mattino non devi toccare niente. Ma se la apri di notte, anche solo per sbaglio, la sessione finisce lì.</span>
+        </span>
+      </label>
+    </fieldset>
+    <fieldset class="options">
+      <legend>Giro di carica</legend>
+      <p class="hint">Mentre dormi il bordo del pulsante si riempie: il giro completo dura queste ore.</p>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="cycle" value="3"><span>3 h</span></label>
+        <label class="chip"><input type="radio" name="cycle" value="4"><span>4 h</span></label>
+        <label class="chip"><input type="radio" name="cycle" value="5"><span>5 h</span></label>
+        <label class="chip"><input type="radio" name="cycle" value="6"><span>6 h</span></label>
+        <label class="chip"><input type="radio" name="cycle" value="7"><span>7 h</span></label>
+        <label class="chip"><input type="radio" name="cycle" value="8"><span>8 h</span></label>
+      </div>
+    </fieldset>
+  </section>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
