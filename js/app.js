@@ -1,4 +1,4 @@
-// Sonno: un pulsante avvia la sessione, la sessione si ferma con conferma o alla riapertura dell'app.
+// Sleepy: un pulsante avvia la sessione, la sessione si ferma con conferma o alla riapertura dell'app.
 
 const $ = s => document.querySelector(s);
 const KEY = "sonno:v2";
@@ -29,16 +29,16 @@ function dur(ms) {
 // ---------- koala ----------
 // Regola provvisoria: da decidere. Cambiala qui.
 const KOALA = {
-  idle:   ["img/koala-saluta.png", "Il koala saluta"], // da sostituire con il koala assonnato
+  idle:   ["img/koala-saluta.png", "Il koala saluta"],
   asleep: ["img/koala-dorme.png", "Il koala dorme"],
   rested: ["img/koala-saluta.png", "Il koala saluta, riposato"],
-  tired:  ["img/koala-caffe.png", "Il koala è stanco e beve un caffè"],
+  tired:  ["img/koala-caffe.png", "Il koala è assonnato e beve un caffè"],
 };
 const moodAfter = ms => (ms < 6 * 3600e3 ? "tired" : "rested");
 
 // ---------- icone ----------
-const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>';
-const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+// Luna gialla del file Figma (l'icona "Icona" del pulsante)
+const MOON = '<svg viewBox="0 0 58.0894 58.0894"><path d="M48.4077 35.0956C44.8523 36.6149 40.9235 37.0349 37.1273 36.3017C33.3311 35.5685 29.8414 33.7157 27.1075 30.9817C24.3735 28.2478 22.5207 24.758 21.7875 20.9619C21.0543 17.1657 21.4743 13.2369 22.9936 9.68154C20.0821 10.9256 17.5202 12.8646 15.5321 15.3287C13.5441 17.7927 12.1906 20.7067 11.5902 23.8153C10.9898 26.9239 11.1608 30.1324 12.0883 33.1595C13.0158 36.1867 14.6714 38.9403 16.9102 41.179C19.1489 43.4178 21.9025 45.0734 24.9297 46.0009C27.9568 46.9284 31.1653 47.0994 34.2739 46.499C37.3825 45.8986 40.2965 44.5451 42.7605 42.557C45.2246 40.569 47.1636 38.0071 48.4077 35.0956Z"/></svg>';
 
 // ---------- schermata ----------
 function setKoala(k) {
@@ -48,20 +48,31 @@ function setKoala(k) {
   $("#koala-wrap").classList.toggle("asleep", k === "asleep");
 }
 
+// Quando cambia schermata, testi e koala compaiono in dissolvenza
+let lastView = null;
+function swapIn(view) {
+  if (view === lastView) return;
+  if (lastView !== null) ["#title", "#eyebrow", "#koala-wrap"].forEach(sel => {
+    const el = $(sel); el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
+  });
+  lastView = view;
+}
+
 function render() {
   const big = $("#big"), below = $("#below");
   big.classList.remove("result", "sleeping");
 
   if (state.active) {
     const start = state.active.start;
-    $("#title").textContent = "Buonanotte";
+    swapIn("asleep");
+    $("#title").textContent = "A nanna.";
     $("#eyebrow").textContent = state.mode === "auto"
-      ? `Sessione iniziata alle ${hm(start)}. Chiudi l'app: quando la riapri, la sessione si ferma.`
-      : `Sessione iniziata alle ${hm(start)}. Quando ti svegli, premi il pulsante.`;
-    $("#big-ico").innerHTML = SUN;
-    $("#big-title").textContent = "Mi sono svegliato";
-    $("#big-sub").textContent = `In corso da ${dur(Date.now() - start)}`;
-    below.innerHTML = `<button type="button" class="link" id="cancel">Annulla la sessione</button>`;
+      ? "Chiudi l'app: quando la riapri, la sessione si ferma"
+      : "Premi il pulsante solo quando ti svegli";
+    $("#big-ico").innerHTML = MOON;
+    $("#big-title").textContent = "Shhh...";
+    $("#big-sub").textContent = "Premi qui";
+    below.innerHTML = `<span>Dalle ${hm(start)} · ${dur(Date.now() - start)}</span><button type="button" class="link" id="cancel">Annulla la sessione</button>`;
     $("#cancel").onclick = cancelSession;
     // Anello di carica: un giro completo in state.cycle ore
     const pct = Math.min(100, (Date.now() - start) / (state.cycle * 3600e3) * 100);
@@ -74,19 +85,21 @@ function render() {
   const last = state.sessions[state.sessions.length - 1];
   if (state.showResult && last) {
     const ms = last.end - last.start;
-    $("#title").textContent = "Buongiorno";
-    $("#eyebrow").textContent = `Dalle ${hm(last.start)} alle ${hm(last.end)}`;
+    swapIn("result");
+    $("#title").textContent = "Ah... buondì";
+    $("#eyebrow").textContent = "Sicuro che non vuoi tornare a dormire altri 5 minuti?";
     big.classList.add("result");
     $("#big-ico").innerHTML = "";
     $("#big-title").textContent = dur(ms);
-    $("#big-sub").textContent = "Tocca per chiudere";
-    below.innerHTML = `<span>Non stavi dormendo?</span><button type="button" class="link" id="resume">Riprendi la sessione</button>`;
+    $("#big-sub").textContent = `Dalle ${hm(last.start)} alle ${hm(last.end)}`;
+    below.innerHTML = `<button type="button" class="link" id="resume">Torna a dormire</button><span>Tocca il pulsante per chiudere</span>`;
     $("#resume").onclick = resumeSession;
     setKoala(moodAfter(ms));
     return;
   }
 
-  $("#title").textContent = "Sonno?";
+  swapIn("idle");
+  $("#title").textContent = "Ciao!";
   $("#eyebrow").textContent = "Premi il pulsante per iniziare a registrare la sessione di sonno";
   $("#big-ico").innerHTML = MOON;
   $("#big-title").textContent = "Vado a dormire";
@@ -164,3 +177,18 @@ function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = fals
 setInterval(() => { if (state.active && !document.hidden) render(); }, 30000);
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
 render();
+
+// ---------- apertura (Figma "Launch") ----------
+// 1. marchio e koala per un attimo  2. escono in alto e in basso  3. la home compare in dissolvenza.
+// Un tocco salta l'attesa.
+const splash = $("#splash");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let splashTimer = setTimeout(leaveSplash, 1500);
+function leaveSplash() {
+  clearTimeout(splashTimer);
+  if (splash.classList.contains("leaving")) return;
+  splash.classList.add("leaving");
+  setTimeout(() => $("#screen").classList.remove("pre"), reduced ? 150 : 550);
+  setTimeout(() => splash.remove(), reduced ? 400 : 900);
+}
+splash.addEventListener("click", leaveSplash);

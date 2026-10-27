@@ -3,24 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Sonno</title>
+  <title>Sleepy</title>
   <meta name="description" content="Registra quanto dormi con un tocco.">
-  <meta name="theme-color" content="#141634">
+  <meta name="theme-color" content="#5C629E">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Sonno">
+  <meta name="apple-mobile-web-app-title" content="Sleepy">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main class="screen">
+<!-- Schermata di apertura (Figma "Launch"): poi il marchio esce in alto, il koala in basso, e compare la home -->
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash-top">
+    <div class="brand">
+      <span class="brand-name">Sleepy</span>
+      <svg class="moon" viewBox="0 0 37.1688 37.1688" aria-hidden="true"><path d="M37.1688 25.4141C33.6134 26.9333 29.6847 27.3534 25.8885 26.6202C22.0923 25.887 18.6025 24.0341 15.8686 21.3002C13.1347 18.5663 11.2818 15.0765 10.5486 11.2803C9.81544 7.48413 10.2355 3.55536 11.7547 0C8.8433 1.24405 6.28136 3.18304 4.2933 5.64711C2.30525 8.11118 0.951745 11.0252 0.351349 14.1338C-0.249046 17.2424 -0.0780125 20.4508 0.849468 23.478C1.77695 26.5052 3.43258 29.2587 5.67133 31.4975C7.91008 33.7362 10.6636 35.3919 13.6908 36.3193C16.718 37.2468 19.9264 37.4179 23.035 36.8175C26.1437 36.2171 29.0576 34.8636 31.5217 32.8755C33.9858 30.8875 35.9248 28.3255 37.1688 25.4141Z"/></svg>
+    </div>
+    <p class="value">L'app che ti farà dormire meglio… perché in fondo pure tu sei un koala</p>
+  </div>
+  <img class="splash-koala" src="img/koala-saluta.png" alt="" width="700" height="727">
+</div>
+
+<main class="screen pre" id="screen">
   <header class="head">
     <div class="head-text">
-      <h1 id="title">Sonno?</h1>
+      <h1 id="title">Ciao!</h1>
       <p class="eyebrow" id="eyebrow">Premi il pulsante per iniziare a registrare la sessione di sonno</p>
     </div>
     <button type="button" class="icon-btn" id="open-settings" aria-label="Impostazioni">
@@ -42,7 +54,7 @@
   </div>
 
   <div class="koala-wrap" id="koala-wrap">
-    <img class="koala" id="koala" src="img/koala-saluta.png" alt="Il koala saluta" width="415" height="414">
+    <img class="koala" id="koala" src="img/koala-saluta.png" alt="Il koala saluta" width="700" height="727">
     <div class="zzz" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>
   </div>
 </main>
@@ -61,7 +73,7 @@
         <input type="radio" name="mode" value="confirm" id="mode-confirm">
         <span class="option-body">
           <b>Con conferma</b>
-          <span>La sessione si ferma solo quando premi «Mi sono svegliato». Se apri l'app di notte per guardare l'ora, il conteggio continua.</span>
+          <span>La sessione si ferma solo quando premi il pulsante. Se apri l'app di notte per guardare l'ora, il conteggio continua.</span>
         </span>
       </label>
       <label class="option">

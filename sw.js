@@ -1,6 +1,6 @@
 // Service worker: rende l'app disponibile offline.
 // Quando modifichi un file, aumenta la versione qui sotto: il telefono scaricherà i file nuovi.
-const CACHE = "sonno-v5";
+const CACHE = "sonno-v6";
 const FILES = [
   "./",
   "./index.html",
