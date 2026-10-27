@@ -8,14 +8,105 @@ function load() {
   try {
     const d = JSON.parse(localStorage.getItem(KEY));
     const cycle = Number(d?.cycle);
-    return { mode: d?.mode === "auto" ? "auto" : "confirm", cycle: cycle >= 3 && cycle <= 8 ? cycle : 8, active: d?.active || null, sessions: d?.sessions || [], showResult: !!d?.showResult };
+    return { mode: d?.mode === "auto" ? "auto" : "confirm", cycle: cycle >= 3 && cycle <= 8 ? cycle : 8, lang: d?.lang === "es" ? "es" : "it", active: d?.active || null, sessions: d?.sessions || [], showResult: !!d?.showResult };
   } catch {
-    return { mode: "confirm", cycle: 8, active: null, sessions: [], showResult: false };
+    return { mode: "confirm", cycle: 8, lang: "it", active: null, sessions: [], showResult: false };
   }
 }
 let state = load();
 function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { toast("Non riesco a salvare sul telefono."); }
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { toast(t("saveError")); }
+}
+
+// ---------- testi: italiano e spagnolo ----------
+// Per cambiare una frase, modificala qui. I testi fissi della pagina usano data-i18n="chiave".
+const STR = {
+  it: {
+    value: "L'app che ti farà dormire meglio… perché in fondo pure tu sei un koala",
+    idleTitle: "Ciao!",
+    idleEyebrow: "Premi il pulsante per iniziare a registrare la sessione di sonno",
+    goToSleep: "Vado a dormire",
+    pressHere: "Premi qui",
+    lastSession: d => `Ultima sessione: ${d}`,
+    asleepTitle: "A nanna.",
+    asleepEyebrow: "Premi il pulsante solo quando ti svegli",
+    asleepEyebrowAuto: "Chiudi l'app: quando la riapri, la sessione si ferma",
+    shhh: "Shhh...",
+    since: (h, d) => `Dalle ${h} · ${d}`,
+    cancel: "Annulla la sessione",
+    resultTitle: "Ah... buondì",
+    resultEyebrow: "Sicuro che non vuoi tornare a dormire altri 5 minuti?",
+    range: (a, b) => `Dalle ${a} alle ${b}`,
+    resume: "Torna a dormire",
+    tapToClose: "Tocca il pulsante per chiudere",
+    cancelled: "Sessione annullata",
+    resumed: "Sessione ripresa",
+    autoOn: "Modalità automatica attiva",
+    confirmOn: "Modalità con conferma attiva",
+    cycleSet: n => `Giro di carica: ${n} ore`,
+    saveError: "Non riesco a salvare sul telefono.",
+    settings: "Impostazioni",
+    close: "Chiudi",
+    langLabel: "Lingua: italiano. Tocca per lo spagnolo",
+    endLegend: "Come finisce la sessione",
+    confirmName: "Con conferma",
+    confirmDesc: "La sessione si ferma solo quando premi il pulsante. Se apri l'app di notte per guardare l'ora, il conteggio continua.",
+    autoName: "Automatica",
+    autoDesc: "La sessione si ferma appena riapri l'app: al mattino non devi toccare niente. Ma se la apri di notte, anche solo per sbaglio, la sessione finisce lì.",
+    cycleLegend: "Giro di carica",
+    cycleHint: "Mentre dormi il bordo del pulsante si riempie: il giro completo dura queste ore.",
+    alt_idle: "Il koala saluta",
+    alt_asleep: "Il koala dorme",
+    alt_rested: "Il koala saluta, riposato",
+    alt_tired: "Il koala è assonnato e beve un caffè",
+  },
+  es: {
+    value: "La app que te hará dormir mejor… porque en el fondo tú también eres un koala",
+    idleTitle: "¡Hola!",
+    idleEyebrow: "Pulsa el botón para empezar a registrar tu sesión de sueño",
+    goToSleep: "Me voy a dormir",
+    pressHere: "Pulsa aquí",
+    lastSession: d => `Última sesión: ${d}`,
+    asleepTitle: "A dormir.",
+    asleepEyebrow: "Pulsa el botón solo cuando te despiertes",
+    asleepEyebrowAuto: "Cierra la app: cuando la vuelvas a abrir, la sesión se detendrá",
+    shhh: "Shhh...",
+    since: (h, d) => `Desde las ${h} · ${d}`,
+    cancel: "Cancelar la sesión",
+    resultTitle: "Ah... buenos días",
+    resultEyebrow: "¿Seguro que no quieres volver a dormir 5 minutitos más?",
+    range: (a, b) => `De ${a} a ${b}`,
+    resume: "Volver a dormir",
+    tapToClose: "Toca el botón para cerrar",
+    cancelled: "Sesión cancelada",
+    resumed: "Sesión reanudada",
+    autoOn: "Modo automático activado",
+    confirmOn: "Modo con confirmación activado",
+    cycleSet: n => `Ciclo de carga: ${n} horas`,
+    saveError: "No puedo guardar en el teléfono.",
+    settings: "Ajustes",
+    close: "Cerrar",
+    langLabel: "Idioma: español. Toca para el italiano",
+    endLegend: "Cómo termina la sesión",
+    confirmName: "Con confirmación",
+    confirmDesc: "La sesión solo se detiene cuando pulsas el botón. Si abres la app por la noche para mirar la hora, el conteo continúa.",
+    autoName: "Automática",
+    autoDesc: "La sesión se detiene en cuanto vuelves a abrir la app: por la mañana no tienes que tocar nada. Pero si la abres por la noche, aunque sea sin querer, la sesión termina ahí.",
+    cycleLegend: "Ciclo de carga",
+    cycleHint: "Mientras duermes, el borde del botón se llena: la vuelta completa dura estas horas.",
+    alt_idle: "El koala saluda",
+    alt_asleep: "El koala duerme",
+    alt_rested: "El koala saluda, descansado",
+    alt_tired: "El koala tiene sueño y toma un café",
+  },
+};
+const t = (k, ...a) => { const v = STR[state.lang][k]; return typeof v === "function" ? v(...a) : v; };
+
+function applyLang() {
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => (el.textContent = t(el.dataset.i18n)));
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
+  document.querySelectorAll("#lang [data-l]").forEach(el => el.classList.toggle("on", el.dataset.l === state.lang));
 }
 
 // ---------- tempo ----------
@@ -27,12 +118,12 @@ function dur(ms) {
 }
 
 // ---------- koala ----------
-// Regola provvisoria: da decidere. Cambiala qui.
+// Regola provvisoria: da decidere. Cambiala qui. (Le descrizioni sono in STR, alla voce alt_…)
 const KOALA = {
-  idle:   ["img/koala-saluta.png", "Il koala saluta"],
-  asleep: ["img/koala-dorme.png", "Il koala dorme"],
-  rested: ["img/koala-saluta.png", "Il koala saluta, riposato"],
-  tired:  ["img/koala-caffe.png", "Il koala è assonnato e beve un caffè"],
+  idle:   "img/koala-saluta.png",
+  asleep: "img/koala-dorme.png",
+  rested: "img/koala-saluta.png",
+  tired:  "img/koala-caffe.png",
 };
 const moodAfter = ms => (ms < 6 * 3600e3 ? "tired" : "rested");
 
@@ -42,9 +133,9 @@ const MOON = '<svg viewBox="0 0 58.0894 58.0894"><path d="M48.4077 35.0956C44.85
 
 // ---------- schermata ----------
 function setKoala(k) {
-  const [src, alt] = KOALA[k]; const img = $("#koala");
+  const src = KOALA[k]; const img = $("#koala");
   if (!img.src.endsWith(src)) img.src = src;
-  img.alt = alt;
+  img.alt = t("alt_" + k);
   $("#koala-wrap").classList.toggle("asleep", k === "asleep");
 }
 
@@ -65,14 +156,12 @@ function render() {
   if (state.active) {
     const start = state.active.start;
     swapIn("asleep");
-    $("#title").textContent = "A nanna.";
-    $("#eyebrow").textContent = state.mode === "auto"
-      ? "Chiudi l'app: quando la riapri, la sessione si ferma"
-      : "Premi il pulsante solo quando ti svegli";
+    $("#title").textContent = t("asleepTitle");
+    $("#eyebrow").textContent = t(state.mode === "auto" ? "asleepEyebrowAuto" : "asleepEyebrow");
     $("#big-ico").innerHTML = MOON;
-    $("#big-title").textContent = "Shhh...";
-    $("#big-sub").textContent = "Premi qui";
-    below.innerHTML = `<span>Dalle ${hm(start)} · ${dur(Date.now() - start)}</span><button type="button" class="link" id="cancel">Annulla la sessione</button>`;
+    $("#big-title").textContent = t("shhh");
+    $("#big-sub").textContent = t("pressHere");
+    below.innerHTML = `<span>${t("since", hm(start), dur(Date.now() - start))}</span><button type="button" class="link" id="cancel">${t("cancel")}</button>`;
     $("#cancel").onclick = cancelSession;
     // Anello di carica: un giro completo in state.cycle ore
     const pct = Math.min(100, (Date.now() - start) / (state.cycle * 3600e3) * 100);
@@ -86,25 +175,25 @@ function render() {
   if (state.showResult && last) {
     const ms = last.end - last.start;
     swapIn("result");
-    $("#title").textContent = "Ah... buondì";
-    $("#eyebrow").textContent = "Sicuro che non vuoi tornare a dormire altri 5 minuti?";
+    $("#title").textContent = t("resultTitle");
+    $("#eyebrow").textContent = t("resultEyebrow");
     big.classList.add("result");
     $("#big-ico").innerHTML = "";
     $("#big-title").textContent = dur(ms);
-    $("#big-sub").textContent = `Dalle ${hm(last.start)} alle ${hm(last.end)}`;
-    below.innerHTML = `<button type="button" class="link" id="resume">Torna a dormire</button><span>Tocca il pulsante per chiudere</span>`;
+    $("#big-sub").textContent = t("range", hm(last.start), hm(last.end));
+    below.innerHTML = `<button type="button" class="link" id="resume">${t("resume")}</button><span>${t("tapToClose")}</span>`;
     $("#resume").onclick = resumeSession;
     setKoala(moodAfter(ms));
     return;
   }
 
   swapIn("idle");
-  $("#title").textContent = "Ciao!";
-  $("#eyebrow").textContent = "Premi il pulsante per iniziare a registrare la sessione di sonno";
+  $("#title").textContent = t("idleTitle");
+  $("#eyebrow").textContent = t("idleEyebrow");
   $("#big-ico").innerHTML = MOON;
-  $("#big-title").textContent = "Vado a dormire";
-  $("#big-sub").textContent = "Premi qui";
-  below.textContent = last ? `Ultima sessione: ${dur(last.end - last.start)}` : "";
+  $("#big-title").textContent = t("goToSleep");
+  $("#big-sub").textContent = t("pressHere");
+  below.textContent = last ? t("lastSession", dur(last.end - last.start)) : "";
   setKoala("idle");
 }
 
@@ -123,14 +212,14 @@ function stopSession(at = Date.now()) {
 }
 function cancelSession() {
   state.active = null;
-  save(); render(); toast("Sessione annullata");
+  save(); render(); toast(t("cancelled"));
 }
 function resumeSession() {
   const last = state.sessions.pop();
   if (!last) return;
   state.active = { start: last.start };
   state.showResult = false;
-  save(); render(); toast("Sessione ripresa");
+  save(); render(); toast(t("resumed"));
 }
 $("#big").onclick = () => {
   if (state.active) stopSession();
@@ -163,12 +252,12 @@ sheet.addEventListener("click", e => { if (e.target === sheet) closeSettings(); 
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) closeSettings(); });
 document.querySelectorAll("input[name=mode]").forEach(r => r.addEventListener("change", () => {
   state.mode = r.value; save(); render();
-  toast(r.value === "auto" ? "Modalità automatica attiva" : "Modalità con conferma attiva");
+  toast(t(r.value === "auto" ? "autoOn" : "confirmOn"));
 }));
 
 document.querySelectorAll("input[name=cycle]").forEach(r => r.addEventListener("change", () => {
   state.cycle = Number(r.value); save(); render();
-  toast(`Giro di carica: ${r.value} ore`);
+  toast(t("cycleSet", r.value));
 }));
 
 // ---------- varie ----------
@@ -176,6 +265,13 @@ let tt;
 function toast(t) { const el = $("#toast"); el.textContent = t; el.hidden = false; clearTimeout(tt); tt = setTimeout(() => (el.hidden = true), 2200); }
 setInterval(() => { if (state.active && !document.hidden) render(); }, 30000);
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
+
+// ---------- lingua: il pulsante IT / ES accanto all'ingranaggio cambia tutti i testi al volo ----------
+$("#lang").onclick = () => {
+  state.lang = state.lang === "it" ? "es" : "it";
+  save(); applyLang(); render();
+};
+applyLang();
 render();
 
 // ---------- apertura (Figma "Launch") ----------

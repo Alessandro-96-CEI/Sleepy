@@ -24,7 +24,7 @@
       <span class="brand-name">Sleepy</span>
       <svg class="moon" viewBox="0 0 37.1688 37.1688" aria-hidden="true"><path d="M37.1688 25.4141C33.6134 26.9333 29.6847 27.3534 25.8885 26.6202C22.0923 25.887 18.6025 24.0341 15.8686 21.3002C13.1347 18.5663 11.2818 15.0765 10.5486 11.2803C9.81544 7.48413 10.2355 3.55536 11.7547 0C8.8433 1.24405 6.28136 3.18304 4.2933 5.64711C2.30525 8.11118 0.951745 11.0252 0.351349 14.1338C-0.249046 17.2424 -0.0780125 20.4508 0.849468 23.478C1.77695 26.5052 3.43258 29.2587 5.67133 31.4975C7.91008 33.7362 10.6636 35.3919 13.6908 36.3193C16.718 37.2468 19.9264 37.4179 23.035 36.8175C26.1437 36.2171 29.0576 34.8636 31.5217 32.8755C33.9858 30.8875 35.9248 28.3255 37.1688 25.4141Z"/></svg>
     </div>
-    <p class="value">L'app che ti farà dormire meglio… perché in fondo pure tu sei un koala</p>
+    <p class="value" data-i18n="value">L'app che ti farà dormire meglio… perché in fondo pure tu sei un koala</p>
   </div>
   <img class="splash-koala" src="img/koala-saluta.png" alt="" width="700" height="727">
 </div>
@@ -35,7 +35,10 @@
       <h1 id="title">Ciao!</h1>
       <p class="eyebrow" id="eyebrow">Premi il pulsante per iniziare a registrare la sessione di sonno</p>
     </div>
-    <button type="button" class="icon-btn" id="open-settings" aria-label="Impostazioni">
+    <button type="button" class="lang-btn" id="lang" data-i18n-aria="langLabel" aria-label="Lingua: italiano. Tocca per lo spagnolo">
+      <span class="lang-pill"><span data-l="it" class="on">IT</span><span data-l="es">ES</span></span>
+    </button>
+    <button type="button" class="icon-btn" id="open-settings" data-i18n-aria="settings" aria-label="Impostazioni">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </button>
   </header>
@@ -62,31 +65,31 @@
 <div class="sheet-backdrop" id="settings" hidden>
   <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <div class="sheet-head">
-      <h2 id="settings-title">Impostazioni</h2>
-      <button type="button" class="icon-btn" id="close-settings" aria-label="Chiudi">
+      <h2 id="settings-title" data-i18n="settings">Impostazioni</h2>
+      <button type="button" class="icon-btn" id="close-settings" data-i18n-aria="close" aria-label="Chiudi">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
     <fieldset class="options">
-      <legend>Come finisce la sessione</legend>
+      <legend data-i18n="endLegend">Come finisce la sessione</legend>
       <label class="option">
         <input type="radio" name="mode" value="confirm" id="mode-confirm">
         <span class="option-body">
-          <b>Con conferma</b>
-          <span>La sessione si ferma solo quando premi il pulsante. Se apri l'app di notte per guardare l'ora, il conteggio continua.</span>
+          <b data-i18n="confirmName">Con conferma</b>
+          <span data-i18n="confirmDesc">La sessione si ferma solo quando premi il pulsante. Se apri l'app di notte per guardare l'ora, il conteggio continua.</span>
         </span>
       </label>
       <label class="option">
         <input type="radio" name="mode" value="auto" id="mode-auto">
         <span class="option-body">
-          <b>Automatica</b>
-          <span>La sessione si ferma appena riapri l'app: al mattino non devi toccare niente. Ma se la apri di notte, anche solo per sbaglio, la sessione finisce lì.</span>
+          <b data-i18n="autoName">Automatica</b>
+          <span data-i18n="autoDesc">La sessione si ferma appena riapri l'app: al mattino non devi toccare niente. Ma se la apri di notte, anche solo per sbaglio, la sessione finisce lì.</span>
         </span>
       </label>
     </fieldset>
     <fieldset class="options">
-      <legend>Giro di carica</legend>
-      <p class="hint">Mentre dormi il bordo del pulsante si riempie: il giro completo dura queste ore.</p>
+      <legend data-i18n="cycleLegend">Giro di carica</legend>
+      <p class="hint" data-i18n="cycleHint">Mentre dormi il bordo del pulsante si riempie: il giro completo dura queste ore.</p>
       <div class="chips">
         <label class="chip"><input type="radio" name="cycle" value="3"><span>3 h</span></label>
         <label class="chip"><input type="radio" name="cycle" value="4"><span>4 h</span></label>

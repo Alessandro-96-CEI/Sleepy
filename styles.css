@@ -59,6 +59,12 @@ h1 { margin: 0; font-size: 28px; line-height: 34px; font-weight: 700; }
 }
 .icon-btn:hover { background: rgba(255, 255, 255, 0.12); color: var(--ink); }
 
+/* Pulsante lingua IT / ES: la lingua attiva è evidenziata in bianco */
+.lang-btn { height: 44px; margin-top: -6px; padding: 0 2px; border: none; background: none; display: grid; place-items: center; flex: none; }
+.lang-pill { display: flex; padding: 2px; border: 1.5px solid rgba(255, 255, 255, 0.55); border-radius: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+.lang-pill span { padding: 4px 8px; border-radius: 12px; line-height: 1; color: var(--muted); }
+.lang-pill span.on { background: var(--surface); color: var(--accent); }
+
 .center { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 
 .big {
